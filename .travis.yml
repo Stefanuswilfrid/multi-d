@@ -1,0 +1,14 @@
+sudo: required
+services:
+  - docker 
+before_install:
+  - docker build -t stefanuswat/d-react -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true stefanuswat/d-react  npm test 
+
+after_success:
+  - docker build -t stefanuswat/multi-client ./client
+  - docker build -t stefanuswat/multi-nginx ./nginx
+  - docker build -t stefanuswat/multi-server ./server
+  - docker build -t stefanuswat/multi-worker ./worker
